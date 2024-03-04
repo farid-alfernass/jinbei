@@ -6,6 +6,7 @@ const APM = require('./helpers/components/monitoring/observability');
 const Logger = require('./helpers/utils/logger');
 const GS = require('./helpers/components/joshu/graceful_shutdown');
 const MongoConnection = require('./helpers/databases/mongodb/connection');
+const MongoDB = require('./helpers/databases/mongodb/db');
 
 module.exports = {
   ...BasicAuth,
@@ -15,5 +16,6 @@ module.exports = {
   ...APM,
   ...Logger,
   ...MongoConnection,
-  ...GS
+  ...GS,
+  ...MongoDB
 };

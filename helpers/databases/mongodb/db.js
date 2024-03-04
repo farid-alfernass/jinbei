@@ -13,7 +13,7 @@ class DB {
   }
 
   async getDatabase(collectionName) {
-    const result = await mongoConnection.getConnection(this.config);
+    const result = await mongoConnection.getMongoConnection(this.config);
     const cacheConnection = result.data.db;
     const connection = cacheConnection.db();
     return connection.collection(collectionName);

@@ -4,7 +4,7 @@ const wrapper = require('../../utils/wrapper');
 
 let connectionPool = new Map();
 
-const init = async (config) => {
+const mongoInit = async (config) => {
   try {
     const poolKey = JSON.stringify(config);
     const mongoConnection = new MongoClient(config, {
@@ -21,7 +21,7 @@ const init = async (config) => {
   }
 };
 
-const getConnection = async (config) => {
+const getMongoConnection = async (config) => {
   const poolKey = JSON.stringify(config);
   if (!connectionPool.has(poolKey)) {
     await init(config);
@@ -31,6 +31,6 @@ const getConnection = async (config) => {
 };
 
 module.exports = {
-  init,
-  getConnection
+  mongoInit,
+  getMongoConnection
 };
