@@ -1,6 +1,5 @@
 
 const jwt = require('jsonwebtoken');
-const validate = require('validate.js');
 const config = require('../infra/configs/global_config');
 const wrapper = require('../helpers/utils/wrapper');
 const { ERROR } = require('../helpers/http-status/status_code');
