@@ -6,7 +6,7 @@ const data = (data) => ({ err: null, data});
 
 const paginationData = (data, meta) => ({ err: null, data, meta});
 
-const error = (err) => ({ err, data: null });
+const errorResponse = (err) => ({ err, data: null });
 
 const response = (res, type, result, message = '', responseCode = 200) => {
   let status = true;
@@ -78,7 +78,7 @@ const checkErrorCode = (error) => {
 module.exports = {
   data,
   paginationData,
-  error,
+  errorResponse,
   response,
   paginationResponse
 };
