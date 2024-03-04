@@ -17,9 +17,9 @@ passport.use(new BasicStrategy((username, password, cb) => {
 }));
 
 const isAuthenticated = passport.authenticate('basic', { session: false });
-const init = () => passport.initialize();
+const initBasicAuth = () => passport.initialize();
 
 module.exports = {
   isAuthenticated,
-  init
+  initBasicAuth
 };
