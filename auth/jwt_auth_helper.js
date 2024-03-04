@@ -1,7 +1,6 @@
 
 const jwt = require('jsonwebtoken');
 const validate = require('validate.js');
-const queryUser = require('../modules/user/repositories/queries/query_handler');
 const config = require('../infra/configs/global_config');
 const wrapper = require('../helpers/utils/wrapper');
 const { ERROR } = require('../helpers/http-status/status_code');
@@ -15,7 +14,6 @@ const Redis = require('../helpers/databases/redis/redis');
 const redisClient = new Redis(config.get('/redis'));
 
 const generateToken = async (payload) => {
-  console.log('generateToken',config.get('/jwt/privateKey'))
   const privateKey = decodeKey(config.get('/jwt/privateKey'));
   return jwt.sign(payload, privateKey, config.get('/jwt/signOptions'));
 };
@@ -57,20 +55,6 @@ const verifyToken = async (req, res) => {
   req.userMeta = checkRefreshToken.data.userMeta;
 };
 
-const getUser = async (userId) => {
-
-  const userFlag = await redisClient.getData(`user-profile:${userId}`);
-  if (validate.isEmpty(userFlag.data)) {
-    const user = await queryUser.getUser(userId);
-    if (user.data) {
-      await redisClient.setDataEx(`user-profile:${userId}`, user, 10 * 60);
-    }
-    return user;
-  }
-
-  return JSON.parse(userFlag.data).data;
-};
-
 const verifyAccessToken = async (token) => {
   let decodedToken;
   try {
@@ -84,16 +68,11 @@ const verifyAccessToken = async (token) => {
   const userId = decodedToken.sub;
   const user = decodedToken.metadata;
 
-  // const user = await getUser(userId);
-  // if (user.err) {
-  //   user.err = new ForbiddenError('Invalid token!');
-  //   return wrapper.error(new UnauthorizedError('UserId not found!'));
-  // }
   const blacklistedToken = await checkBlacklistedToken(userId, token);
   if (blacklistedToken.data) {
     return wrapper.error(new ForbiddenError('Blacklisted token!'));
   }
-  
+
   return wrapper.data({
     userId: userId,
     accessToken: token,

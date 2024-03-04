@@ -6,6 +6,7 @@ const APM = require('./helpers/components/monitoring/observability');
 const Logger = require('./helpers/utils/logger');
 const GS = require('./helpers/components/joshu/graceful_shutdown');
 const Validator = require('./helpers/utils/validator');
+const Common = require('./helpers/utils/common');
 module.exports = {
   ...BasicAuth,
   ...JwtAuth,
@@ -14,5 +15,6 @@ module.exports = {
   ...APM,
   ...Logger,
   ...GS,
-  ...Validator
+  ...Validator,
+  ...Common
 };

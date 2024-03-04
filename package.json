@@ -8,7 +8,10 @@
   },
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "slint": "sonarlint --src './**' --tests 'test/**'",
+    "lint": "eslint auth helpers",
+    "lint:fix": "npm run lint -- --fix"  
   },
   "repository": {
     "type": "git",
@@ -70,6 +73,11 @@
     "lint"
   ],
   "devDependencies": {
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^7.11.1",
+    "sonarlint": "^1.1.0"
   }
 }
