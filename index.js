@@ -7,6 +7,8 @@ const Logger = require('./helpers/utils/logger');
 const GS = require('./helpers/components/joshu/graceful_shutdown');
 const Validator = require('./helpers/utils/validator');
 const Common = require('./helpers/utils/common');
+const RedisDB = require('./redis/db');
+
 module.exports = {
   ...BasicAuth,
   ...JwtAuth,
@@ -16,5 +18,6 @@ module.exports = {
   ...Logger,
   ...GS,
   ...Validator,
-  ...Common
+  ...Common,
+  RedisDB
 };
