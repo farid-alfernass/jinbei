@@ -12,13 +12,13 @@ const checkRole = (serviceName) => {
       const isAuthorized = roleList.some((role) => ROLES_DETAIL[role]?.includes(serviceName));
       if (!isAuthorized) {
         const errorMessage = `Insufficient privileges for ${serviceName}`;
-        sendResponse(wrapper.error(new UnauthorizedError(errorMessage)), res);
+        sendResponse(wrapper.errorResponse(new UnauthorizedError(errorMessage)), res);
       } else {
         next();
       }
     } catch (error) {
       logger.error('checkRole','Error in role check middleware', error);
-      sendResponse(wrapper.error(new UnauthorizedError('Unauthorized')), res);
+      sendResponse(wrapper.errorResponse(new UnauthorizedError('Unauthorized')), res);
     }
   };
 };
