@@ -1,17 +1,17 @@
-const { ROLES_DETAIL } = require('./role_index');
 const { UnauthorizedError } = require('../helpers/error/index');
 const { sendResponse } = require('../helpers/utils/response');
 const wrapper = require('../helpers/utils/wrapper');
 const logger = require('../helpers/utils/logger');
 
-const checkRole = (serviceName) => {
+const checkRole = () => {
   return function (req, res, next) {
     const { userMeta } = req;
-    const roleList = userMeta.roles;
     try {
-      const isAuthorized = roleList.some((role) => ROLES_DETAIL[role]?.includes(serviceName));
-      if (!isAuthorized) {
-        const errorMessage = `Insufficient privileges for ${serviceName}`;
+      if (!userMeta) {
+        const errorMessage = `Insufficient privileges for ${userMeta.userId}`;
+        sendResponse(wrapper.errorResponse(new UnauthorizedError(errorMessage)), res);    }
+      if (!userMeta.isAdmin) {
+        const errorMessage = `Insufficient privileges for ${userMeta.userId}`;
         sendResponse(wrapper.errorResponse(new UnauthorizedError(errorMessage)), res);
       } else {
         next();
