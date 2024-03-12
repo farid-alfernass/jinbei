@@ -60,16 +60,16 @@ const verifyAccessToken = async (token) => {
     decodedToken = jwt.verify(token, decodeKey(config.get('/jwt/publicKey')), config.get('/jwt/verifyOptions'));
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      return wrapper.errorResponseResponse(new UnauthorizedError('Access token expired!'));
+      return wrapper.errorResponse(new UnauthorizedError('Access token expired!'));
     }
-    return wrapper.errorResponseResponse(new UnauthorizedError('Token is not valid!'));
+    return wrapper.errorResponse(new UnauthorizedError('Token is not valid!'));
   }
   const userId = decodedToken.sub;
   const user = decodedToken.metadata;
 
   const blacklistedToken = await checkBlacklistedToken(userId, token);
   if (blacklistedToken.data) {
-    return wrapper.errorResponseResponse(new ForbiddenError('Blacklisted token!'));
+    return wrapper.errorResponse(new ForbiddenError('Blacklisted token!'));
   }
 
   return wrapper.data({
@@ -82,10 +82,10 @@ const verifyAccessToken = async (token) => {
 const checkBlacklistedToken = async (userId, token) => {
   const blacklistedToken = await redisClient.getData(`blacklist-token:${userId}`);
   if (blacklistedToken.err || !blacklistedToken.data) {
-    return wrapper.errorResponseResponse(new NotFoundError('blacklist token not found'));
+    return wrapper.errorResponse(new NotFoundError('blacklist token not found'));
   }
   if (JSON.parse(blacklistedToken.data).data !== token) {
-    return wrapper.errorResponseResponse(new NotFoundError('blacklist token not matched'));
+    return wrapper.errorResponse(new NotFoundError('blacklist token not matched'));
   }
   return wrapper.data('ok');
 };
@@ -96,14 +96,14 @@ const verifyRefreshToken = async (token) => {
     decodedToken = jwt.verify(token, decodeKey(config.get('/jwt/refresh/publicKey')), config.get('/jwt/verifyOptions'));
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      return wrapper.errorResponseResponse(new UnauthorizedError('Refresh token expired!'));
+      return wrapper.errorResponse(new UnauthorizedError('Refresh token expired!'));
     }
-    return wrapper.errorResponseResponse(new UnauthorizedError('Token is not valid!'));
+    return wrapper.errorResponse(new UnauthorizedError('Token is not valid!'));
   }
   const userId = decodedToken.sub;
   const refreshToken = await checkRefreshToken(userId, token);
   if (refreshToken.err) {
-    return wrapper.errorResponseResponse(refreshToken.err);
+    return wrapper.errorResponse(refreshToken.err);
   }
   return wrapper.data({userId: userId});
 };
@@ -111,10 +111,10 @@ const verifyRefreshToken = async (token) => {
 const checkRefreshToken = async (userId, token) => {
   const refreshToken = await redisClient.getData(`refresh-token:${userId}`);
   if (refreshToken.err || !refreshToken.data) {
-    return wrapper.errorResponseResponseResponse(new NotFoundError('refresh token not found'));
+    return wrapper.errorResponseResponse(new NotFoundError('refresh token not found'));
   }
   if (JSON.parse(refreshToken.data).data !== token) {
-    return wrapper.errorResponseResponse(new NotFoundError('refresh token not matched'));
+    return wrapper.errorResponse(new NotFoundError('refresh token not matched'));
   }
   return wrapper.data('ok');
 };

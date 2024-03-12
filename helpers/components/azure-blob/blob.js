@@ -24,7 +24,7 @@ class BLOB {
     });
     return Promise.resolve(result)
       .then(res => wrapper.data(res))
-      .catch(err => wrapper.errorResponseResponse(err));
+      .catch(err => wrapper.errorResponse(err));
   }
 
   async removeBlob(container, blobName) {
@@ -41,7 +41,7 @@ class BLOB {
     });
     return Promise.resolve(result)
       .then(res => wrapper.data(res))
-      .catch(err => wrapper.errorResponseResponse(err));
+      .catch(err => wrapper.errorResponse(err));
   }
 }
 
