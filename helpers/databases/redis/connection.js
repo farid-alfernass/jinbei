@@ -1,22 +1,16 @@
 const Redis = require('ioredis');
 const logger = require('../../utils/logger');
-const connectionPool = [];
+let connectionPool = [];
 
 const createConnectionPool = async (config) => {
   const currConnection = connectionPool.findIndex(conf => conf.config.toString() === config.toString());
   if (currConnection === -1) {
     const client = new Redis({
-      retryStrategy: function (times) {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
-      },
-      reconnectOnError: function (error) {
-        const targetError = 'READONLY';
-        if (error.message.slice(0, targetError.length) === targetError) {
-          // Only reconnect when the error starts with "READONLY"
-          return true; // or `return 1;`
-        }
-      }
+      host: config.host,
+      port: config.port,
+      password: config.password,
+      retryStrategy: times => Math.min(times * 50, 2000),
+      reconnectOnError: error => error.message.startsWith('READONLY')
     });
 
     client.on('error', (error) => {
@@ -35,7 +29,10 @@ const createConnectionPool = async (config) => {
   }
 };
 
-const getConnection = async () => {
+const getConnection = async (config) => {
+  if(connectionPool.length === 0) {
+    connectionPool = await createConnectionPool(config);
+  }
   return connectionPool;
 };
 

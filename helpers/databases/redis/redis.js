@@ -4,10 +4,14 @@ const validate = require('validate.js');
 
 class Redis {
 
+  constructor(config) {
+    this.config = config.connection;
+  }
+
   async setData(key, value) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const convertToString = JSON.stringify({
       data: value,
@@ -20,9 +24,9 @@ class Redis {
   }
 
   async setDataEx(key, value, duration) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const convertToString = JSON.stringify({
       data: value,
@@ -36,9 +40,9 @@ class Redis {
   }
 
   async getData(key) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
@@ -56,9 +60,9 @@ class Redis {
   }
 
   async getAllKeys(keyPattern) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
@@ -76,9 +80,9 @@ class Redis {
   }
 
   async deleteKey(key) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
@@ -96,9 +100,9 @@ class Redis {
   }
 
   async setZeroAttemp(key, duration) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
@@ -116,9 +120,9 @@ class Redis {
   }
 
   async incrAttempt(key) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
@@ -136,9 +140,9 @@ class Redis {
   }
 
   async setReminder(key, value, expire, action) {
-    let client = await pool.getConnection();
+    let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool();
+      client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
 
