@@ -30,15 +30,15 @@ const createConnectionPool = async (config) => {
 };
 
 const getConnection = async (config) => {
-  if(connectionPool.length === 0) {
+  if(!connectionPool ||connectionPool.length === 0) {
     connectionPool = await createConnectionPool(config);
   }
   return connectionPool;
 };
 
-const init = async () => {
+const init = async (config) => {
   try {
-    await getConnection();
+    await getConnection(config);
     logger.log(__filename, 'redis-init', 'Successfully connected to Redis', 'info');
   } catch (err) {
     logger.log(__filename, 'redis-init', `Failed to connect to Redis: ${err}`, 'error');
