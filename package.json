@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "slint": "sonarlint --src './**' --tests 'test/**'",
     "lint": "eslint auth helpers",
-    "lint:fix": "npm run lint -- --fix"  
+    "lint:fix": "npm run lint -- --fix"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "dotenv": "^16.0.3",
     "elastic-apm-node": "^3.46.0",
     "hot-shots": "^9.0.0",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
     "passport": "0.7.0",
     "passport-http": "0.3.0",
@@ -73,11 +74,11 @@
     "lint"
   ],
   "devDependencies": {
-    "pre-commit": "^1.2.2",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.11.1",
+    "pre-commit": "^1.2.2",
     "sonarlint": "^1.1.0"
   }
 }

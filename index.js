@@ -8,6 +8,7 @@ const GS = require('./helpers/components/joshu/graceful_shutdown');
 const Validator = require('./helpers/utils/validator');
 const Common = require('./helpers/utils/common');
 const RedisDB = require('./helpers/databases/redis/redis');
+const RedisConnection = require('./helpers/databases/redis/connection');
 module.exports = {
   ...BasicAuth,
   ...JwtAuth,
@@ -18,5 +19,6 @@ module.exports = {
   ...GS,
   ...Validator,
   ...Common,
-  RedisDB
+  RedisDB,
+  RedisConnection
 };
