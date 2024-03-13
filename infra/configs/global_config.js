@@ -70,8 +70,7 @@ const config = {
     connection: {
       host: process.env.REDIS_CLIENT_HOST,
       port: process.env.REDIS_CLIENT_PORT,
-      passsword: process.env.REDIS_CLIENT_PASSWORD,
-      auth_pass: process.env.REDIS_CLIENT_PASSWORD,
+      passsword: process.env.REDIS_CLIENT_PASSWORD
     }
   },
   postgreConfig:{
