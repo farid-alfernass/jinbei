@@ -18,7 +18,7 @@ class Redis {
     });
     const clientRedis = client;
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed to set data on Redis: ${err}`);
+      return wrapper.errorResponse(`Failed to set data on Redis: ${err}`);
     });
     clientRedis.set(key, convertToString);
   }
@@ -33,7 +33,7 @@ class Redis {
     });
     const clientRedis = client;
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed to set data on Redis: ${err}`);
+      return wrapper.errorResponse(`Failed to set data on Redis: ${err}`);
     });
 
     clientRedis.set(key, convertToString, 'EX', duration);
@@ -47,12 +47,12 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis.get(key, (err, replies) => {
         if (err) {
-          reject(wrapper.error(err));
+          reject(wrapper.errorResponse(err));
         }
         resolve(wrapper.data(replies));
       });
@@ -67,12 +67,12 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis.keys(keyPattern, (err, replies) => {
         if (err) {
-          reject(wrapper.error(err));
+          reject(wrapper.errorResponse(err));
         }
         resolve(wrapper.data(replies));
       });
@@ -87,12 +87,12 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis.del(key, (err, replies) => {
         if (err) {
-          reject(wrapper.error(err));
+          reject(wrapper.errorResponse(err));
         }
         resolve(wrapper.data(replies));
       });
@@ -107,12 +107,12 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis.set(key, '0', 'EX', duration, (err, replies) => {
         if (err) {
-          reject(wrapper.error(err));
+          reject(wrapper.errorResponse(err));
         }
         resolve(wrapper.data(replies));
       });
@@ -127,12 +127,12 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis.incr(key, (err, replies) => {
         if (err) {
-          reject(wrapper.error(err));
+          reject(wrapper.errorResponse(err));
         }
         resolve(wrapper.data(replies));
       });
@@ -147,7 +147,7 @@ class Redis {
     const clientRedis = client;
 
     clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
+      return wrapper.errorResponse(`Failed Get data From Redis: ${err}`);
     });
     return new Promise((resolve, reject) => {
       clientRedis
