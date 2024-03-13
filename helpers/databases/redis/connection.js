@@ -1,39 +1,30 @@
 const Redis = require('ioredis');
 const logger = require('../../utils/logger');
-let connectionPool = [];
+let redisClient;
 
 const createConnectionPool = async (config) => {
-  const currConnection = connectionPool.findIndex(conf => conf.config.toString() === config.toString());
-  if (currConnection === -1) {
-    const client = new Redis({
-      host: config.host,
-      port: config.port,
-      password: config.password,
-      retryStrategy: times => Math.min(times * 50, 2000),
-      reconnectOnError: error => error.message.startsWith('READONLY')
-    });
+  redisClient = new Redis({
+    host: config.host,
+    port: config.port,
+    password: config.password,
+    retryStrategy: times => Math.min(times * 50, 2000),
+    reconnectOnError: error => error.message.startsWith('READONLY'),
+    enableOfflineQueue: true,
+    enableReadyCheck: true,
+    slotsRefreshTimeout: 1000,
+  });
 
-    client.on('error', (error) => {
-      if (error.code === 'ECONNREFUSED') {
-        logger.log('redis', 'The server refused the connection', 'error');
-      }
-      if (error.code === 'ECONNRESET') {
-        logger.log('redis', 'The server reset the connection', 'error');
-      }
-      if (error.code === 'ETIMEDOUT') {
-        logger.log('redis', 'The server timeouted the connection', 'error');
-      }
-    });
-
-    connectionPool.push({ config, client });
-  }
+  redisClient.on('error', (err) => {
+    logger.log(__filename, 'redis', `Failed to connect to Redis Cluster: ${err}`, 'error');
+  });
+  return redisClient;
 };
 
 const getConnection = async (config) => {
-  if(!connectionPool ||connectionPool.length === 0) {
-    connectionPool = await createConnectionPool(config);
+  if (!redisClient || redisClient.status === 'end') {
+    redisClient = await createConnectionPool(config);
   }
-  return connectionPool;
+  return redisClient;
 };
 
 const init = async (config) => {
