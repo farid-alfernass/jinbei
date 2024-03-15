@@ -3,19 +3,25 @@ const logger = require('../../utils/logger');
 let redisClient;
 
 const createConnectionPool = async (config) => {
-  redisClient = new Redis({
+  const nodes = [{
     host: config.host,
-    port: config.port,
-    password: config.password,
-    retryStrategy: times => Math.min(times * 50, 2000),
-    reconnectOnError: error => error.message.startsWith('READONLY'),
+    port: config.port
+  }];
+  redisClient = new Redis.Cluster(nodes,{
+    redisOptions: {
+      password: config.password,
+      showFriendlyErrorStack: true,
+      reconnectOnError: function(err) {
+        return err.message.includes('READONLY');
+      },
+    },
     enableOfflineQueue: true,
     enableReadyCheck: true,
     slotsRefreshTimeout: 1000,
   });
 
   redisClient.on('error', (err) => {
-    logger.log(__filename, 'redis', `Failed to connect to Redis Cluster: ${err}`, 'error');
+    logger.log(__filename, 'redis', `Failed to connect to Redis: ${err}`, 'error');
   });
   return redisClient;
 };
