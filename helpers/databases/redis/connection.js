@@ -42,7 +42,7 @@ const createConnectionPool = async (config) => {
     slotsRefreshTimeout: 1000,
   });
   redisClient.on('connect', () => {
-    logger.log(__filename, 'redis', `Connected to Redis Cluster`, 'success');
+    logger.log(__filename, 'redis', 'Connected to Redis Cluster', 'success');
   });
 
   redisClient.on('error', (err) => {
