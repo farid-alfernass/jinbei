@@ -51,7 +51,7 @@ const verifyToken = async (req, res) => {
   }
 
   req.userId = checkedToken.data.userId;
-  req.userMeta = checkRefreshToken.data.userMeta;
+  req.userMeta = checkedToken.data.userMeta;
 };
 
 const verifyAccessToken = async (token) => {
