@@ -1,5 +1,5 @@
 const winston = require('winston');
-require('winston-logstash');
+const LogstashTransport = require('winston3-logstash-transport');
 const ecsFormat = require('@elastic/ecs-winston-format');
 const config = require('../../infra/configs/global_config');
 
@@ -8,7 +8,7 @@ const logger = winston.createLogger({
   format: winston.format.combine( ecsFormat({ convertReqRes: true }), winston.format.timestamp(),  winston.format.json() ),
   transports: [
     new winston.transports.Console(),
-    // new winston.transports.Logstash(config.get('/logstash'))
+    // new LogstashTransport(config.get('/logstash'))
   ],
   exitOnError: false
 });
