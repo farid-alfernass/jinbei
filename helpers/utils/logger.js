@@ -4,6 +4,11 @@ const ecsFormat = require('@elastic/ecs-winston-format');
 const config = require('../../infra/configs/global_config');
 const morgan  = require('morgan');
 
+const serviceName = {
+  service: process.env.SERVICE_NAME,
+  version: process.env.APP_VERSION,
+};
+
 const logger = winston.createLogger({
   level: config.get('/appEnv') !== 'production' ? 'debug' : 'http',
   format: winston.format.combine( ecsFormat({ convertReqRes: true }), winston.format.timestamp(),  winston.format.json() ),
@@ -71,23 +76,55 @@ const init = () => {
   });
 };
 
+const getRealIp = (req) => {
+  if (typeof req.headers['x-original-forwarded-for'] === 'string') {
+    return req.headers['x-original-forwarded-for'].split(',')[0];
+  } else if (typeof req.headers['x-forwarded-for'] === 'string') {
+    return req.headers['x-forwarded-for'].split(',')[0];
+  }
+  return req.socket.remoteAddress;
+
+};
+
 const initLogger = () => {
   return morgan((tokens, req, res) => {
-    const logData = {
-      method: tokens.method(req, res),
-      url: tokens.url(req, res),
-      code: tokens.status(req, res),
-      contentLength: tokens.res(req, res, 'content-length'),
-      responseTime: `${tokens['response-time'](req, res, '0')}`, // in milisecond (ms)
-      date: tokens.date(req, res, 'iso'),
-      ip: tokens['remote-addr'](req,res)
+    const urlOriginal = `${tokens.url(req, res)}`;
+    const responseStatus = tokens.status(req, res);
+    const message = `${tokens.method(req, res)} ${urlOriginal} - ${responseStatus}`;
+    const clientIp = getRealIp(req);
+    const meta = {
+      'service.name': serviceName.service,
+      'service.version': serviceName.version,
+      'log.logger': 'restify',
+      tags: ['audit-log'],
+      'url.original': urlOriginal,
+      'http.request.method': tokens.method(req, res),
+      'user_agent.original': tokens['user-agent'](req, res),
+      'http.response.status_code': responseStatus,
+      'http.response.body.bytes': tokens.res(req, res, 'content-length'),
+      'event.duration': parseInt(tokens['response-time'](req, res, '0')) * 1000000, // in milisecond (ms) so need to convert to ns
+      'http.response.date': tokens.date(req, res, 'iso'),
+      'client.address': req.socket.remoteAddress,
+      'client.ip': clientIp,
+      'user.id': req.userId || '',
+      'user.roles': req.role ? [req.role] : undefined,
     };
     const obj = {
       context: 'service-info',
       scope: 'audit-log',
-      message: 'Logging service...',
-      meta: logData
+      message: message,
+      meta: meta
     };
+    if (responseStatus === '503' && ['/healthz', '/readyz'].includes(urlOriginal)) {
+      logger.warn(obj);
+    } else if (typeof responseStatus === 'string' && responseStatus.startsWith('5')) {
+      logger.error(obj);
+    } else if (typeof responseStatus === 'string' && responseStatus.startsWith('4')) {
+      logger.warn(obj);
+    } else if (['/healthz', '/readyz'].includes(urlOriginal)) {
+      logger.debug(obj);
+    }
+
     logger.info(obj);
     return;
   });
