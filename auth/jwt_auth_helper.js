@@ -10,16 +10,33 @@ const decodeKey = keyPath => fs.readFileSync(keyPath, 'utf8');
 // const decodeKey = (secret) => Buffer.from(secret, 'base64');
 
 const Redis = require('../helpers/databases/redis/redis');
-const redisClient = new Redis(config.get('/redis'));
+const redisClient = new Redis({
+  connection: {
+    host: process.env.REDIS_CLIENT_HOST,
+    port: process.env.REDIS_CLIENT_PORT,
+    password: process.env.REDIS_CLIENT_PASSWORD,
+    auth_pass: process.env.REDIS_CLIENT_PASSWORD,
+  }
+});
 
 const generateToken = async (payload) => {
-  const privateKey = decodeKey(config.get('/jwt/privateKey'));
-  return jwt.sign(payload, privateKey, config.get('/jwt/signOptions'));
+  const privateKey = decodeKey(process.env.PRIVATE_KEY_PATH);
+  return jwt.sign(payload, privateKey, {
+    algorithm: process.env.JWT_SIGNING_ALGORITHM,
+    audience: process.env.JWT_AUDIENCE,
+    issuer: process.env.JWT_ISSUER,
+    expiresIn: process.env.JWT_EXPIRATION_TIME
+  });
 };
 
 const generateRefreshToken = async (payload) => {
-  const privateKey = decodeKey(config.get('/jwt/refresh/privateKey'));
-  const token = jwt.sign(payload, privateKey, config.get('/jwt/refresh/signOptions'));
+  const privateKey = decodeKey(process.env.PRIVATE_KEY_REFRESH_PATH);
+  const token = jwt.sign(payload, privateKey, {
+    algorithm: process.env.JWT_SIGNING_ALGORITHM,
+    audience: process.env.JWT_AUDIENCE,
+    issuer: process.env.JWT_ISSUER,
+    expiresIn: process.env.REFRESH_JWT_EXPIRATION_TIME
+  });
   return token;
 };
 
@@ -57,7 +74,11 @@ const verifyToken = async (req, res) => {
 const verifyAccessToken = async (token) => {
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, decodeKey(config.get('/jwt/publicKey')), config.get('/jwt/verifyOptions'));
+    decodedToken = jwt.verify(token, decodeKey(process.env.PUBLIC_KEY_PATH), {
+      algorithm: process.env.JWT_SIGNING_ALGORITHM,
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER
+    });
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       return wrapper.errorResponse(new UnauthorizedError('Access token expired!'));
@@ -93,7 +114,11 @@ const checkBlacklistedToken = async (userId, token) => {
 const verifyRefreshToken = async (token) => {
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, decodeKey(config.get('/jwt/refresh/publicKey')), config.get('/jwt/verifyOptions'));
+    decodedToken = jwt.verify(token, decodeKey(process.env.PUBLIC_KEY_REFRESH_PATH), {
+      algorithm: process.env.JWT_SIGNING_ALGORITHM,
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER
+    });
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       return wrapper.errorResponse(new UnauthorizedError('Refresh token expired!'));

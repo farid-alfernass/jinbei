@@ -12,7 +12,12 @@ class User {
 }
 
 module.exports.findByUsername = (username, cb) => {
-  const userDatas = config.get('/basicAuthApi');
+  const userDatas = [
+    {
+      username: process.env.BASIC_AUTH_USERNAME,
+      password: process.env.BASIC_AUTH_PASSWORD
+    }
+  ];
   let userData;
 
   userData = userDatas.map((value) => {

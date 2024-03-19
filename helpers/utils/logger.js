@@ -9,7 +9,13 @@ const logger = winston.createLogger({
   format: winston.format.combine( ecsFormat({ convertReqRes: true }), winston.format.timestamp(),  winston.format.json() ),
   transports: [
     new winston.transports.Console(),
-    new LogstashTransport(config.get('/logstash'))
+    new LogstashTransport({
+      host: process.env.LOGSTASH_HOST,
+      port: process.env.LOGSTASH_PORT,
+      node_name: process.env.LOGSTASH_NODE_NAME,
+      ssl_enable: false,
+      max_connect_retries: 10
+    })
   ],
   exitOnError: false
 });
