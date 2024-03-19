@@ -1,8 +1,9 @@
 const winston = require('winston');
-const LogstashTransport = require('winston3-logstash-transport');
+const LogstashTransport = require('winston-logstash/lib/winston-logstash-latest');
 const ecsFormat = require('@elastic/ecs-winston-format');
 const config = require('../../infra/configs/global_config');
 const morgan  = require('morgan');
+const apm = require('elastic-apm-node');
 
 const serviceName = {
   service: process.env.SERVICE_NAME,
@@ -30,50 +31,28 @@ const enableLogging = () => {
 };
 
 const error = (context, message, scope, data) => {
-  const logObject = { context, message, scope, data };
+  const logObject = { context, message, scope, data,...apm.currentTraceIds };
   logger.error(logObject);
 };
 
 const warn = (context, message, scope, data) => {
-  const logObject = { context, message, scope, data };
+  const logObject = { context, message, scope, data,...apm.currentTraceIds };
   logger.warn(logObject);
 };
 
 const info = (context, message, scope, data) => {
-  const logObject = { context, message, scope, data };
+  const logObject = { context, message, scope, data,...apm.currentTraceIds };
   logger.info(logObject);
 };
 
 const debug = (context, message, scope, data) => {
-  const logObject = { context, message, scope, data };
+  const logObject = { context, message, scope, data,...apm.currentTraceIds };
   logger.debug(logObject);
 };
 
 const log = (context, message, scope, data) => {
-  const logObject = { context, message, scope, data };
+  const logObject = { context, message, scope, data,...apm.currentTraceIds };
   logger.debug(logObject);
-};
-
-const init = () => {
-  return morgan((tokens, req, res) => {
-    const logData = {
-      method: tokens.method(req, res),
-      url: tokens.url(req, res),
-      code: tokens.status(req, res),
-      contentLength: tokens.res(req, res, 'content-length'),
-      responseTime: `${tokens['response-time'](req, res, '0')}`, // in milisecond (ms)
-      date: tokens.date(req, res, 'iso'),
-      ip: tokens['remote-addr'](req,res)
-    };
-    const obj = {
-      context: 'service-info',
-      scope: 'audit-log',
-      message: 'Logging service...',
-      meta: logData
-    };
-    logger.info(obj);
-    return;
-  });
 };
 
 const getRealIp = (req) => {
@@ -113,7 +92,8 @@ const initLogger = () => {
       context: 'service-info',
       scope: 'audit-log',
       message: message,
-      meta: meta
+      meta: meta,
+      ...apm.currentTraceIds
     };
     if (responseStatus === '503' && ['/healthz', '/readyz'].includes(urlOriginal)) {
       logger.warn(obj);
@@ -138,5 +118,4 @@ module.exports = {
   debug,
   log,
   initLogger,
-  init
 };
