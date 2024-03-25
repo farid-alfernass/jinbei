@@ -1,6 +1,8 @@
 stages:
   - secret_detection
   - test
+  - build
+  - release
   
 include:
   - template: Security/SAST.gitlab-ci.yml
@@ -35,8 +37,21 @@ test:
     - rm -f sonar-project.properties
     # - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.sources=bin -Dsonar.host.url=$SONAR_IP  -Dsonar.login=$SONAR_LOGIN -Dsonar.tests=test -Dsonar.language=js -Dsonar.source=bin -Dsonar.inclusions=**/*.js -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.exclusions=coverage/**,**/*.html,**/*.css,bin/app/**,bin/deploy/**,test/** || true
 
+  #dependencies:
+  #  - build
+
+build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --no-push
   dependencies:
-    - build
+    - test
 
 release:
   stage: release
@@ -44,7 +59,7 @@ release:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     - docker push $DOCKERHUB_USERNAME/$IMAGE_NAME
   dependencies:
-    - test
+    - build
   # only :
   #   - deploy
 
