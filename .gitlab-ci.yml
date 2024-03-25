@@ -29,6 +29,7 @@ secret_detection:
   allow_failure: false
 
 test:
+  image: registry.hub.docker.com/library/node:lts-alpine
   stage: test
   script:
     - npm install --silent
