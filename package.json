@@ -6,7 +6,6 @@
   "engines": {
     "node": ">=20"
   },
-  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "slint": "sonarlint --src './**' --tests 'test/**'",
@@ -15,17 +14,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/assesment-project/jinbei.git"
+    "url": "git+https://github.com/farid-alfernass/jinbei.git"
   },
   "keywords": [
-    "codebase",
+    "restify",
+    "express",
     "api",
     "backend",
     "nodejs"
   ],
   "author": "Farid Alfernass",
   "license": "(ISC OR GPL-3.0)",
-  "homepage": "https://gitlab.com/assesment-project/jinbei.git#readme",
+  "homepage": "https://github.com/farid-alfernass/jinbei#readme",
   "dependencies": {
     "@elastic/ecs-winston-format": "^1.5.2",
     "aws-sdk": "^2.304.0",
@@ -81,5 +81,8 @@
     "eslint-plugin-react": "^7.11.1",
     "pre-commit": "^1.2.2",
     "sonarlint": "^1.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/farid-alfernass/jinbei/issues"
   }
 }
