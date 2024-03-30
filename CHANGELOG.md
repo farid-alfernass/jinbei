@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/farid-alfernass/jinbei/compare/v1.0.1...v1.1.0) (2024-03-30)
+
+
+### Features
+
+* add publisher helper redis ([32baf70](https://github.com/farid-alfernass/jinbei/commit/32baf70fc923d407983013b315aaccc9f25c22fc))
+
+
+### Bug Fixes
+
+* apm ([e1358cb](https://github.com/farid-alfernass/jinbei/commit/e1358cbb113665a9711daabc3d2c214e12926cc3))
+* apm ([2028d25](https://github.com/farid-alfernass/jinbei/commit/2028d25ccc5279e892f62cd0c133a0a6c12f8465))
+* auth middle ([3a46dcf](https://github.com/farid-alfernass/jinbei/commit/3a46dcf91688895b550a2371f3d0321a50563151))
+* connection redis ([9af62ec](https://github.com/farid-alfernass/jinbei/commit/9af62ec5698cd313272a75da7ed0d81f312cfc4e))
+* connection redis ([05bd6e3](https://github.com/farid-alfernass/jinbei/commit/05bd6e3564e6592b695d2fb4e62ee539ea2eae89))
+* connection redis ([e2a3a1d](https://github.com/farid-alfernass/jinbei/commit/e2a3a1dc9c4a1adc2569db7b52a5fe591e8845bb))
+* env on package ([31ff056](https://github.com/farid-alfernass/jinbei/commit/31ff05628cf3d5a5eca5fbfd926114913ffc74e9))
+* logger ([351e1f1](https://github.com/farid-alfernass/jinbei/commit/351e1f13a521ec524f518276583e7216567376d6))
+* logger ([4f3ef0d](https://github.com/farid-alfernass/jinbei/commit/4f3ef0d92574e6bb0bb62a3b0e0593d7226c630f))
+* logger ([10b0ec7](https://github.com/farid-alfernass/jinbei/commit/10b0ec7065c07f600dc822943fab3caa2f713c18))
+* logger ([f192e99](https://github.com/farid-alfernass/jinbei/commit/f192e99280eda616a9ef316d416183a12148bf78))
+* typo wrapper response ([ed6feaa](https://github.com/farid-alfernass/jinbei/commit/ed6feaa7c0adaf9b3ccc00104658c89a2444fe02))
+* update redis cnnection cluster ([6e79b04](https://github.com/farid-alfernass/jinbei/commit/6e79b04219b3a75fbc7ef876a040828f258489c0))
+
 ### [1.0.2](https://github.com/farid-alfernass/jinbei/compare/v1.0.1...v1.0.2) (2024-03-29)
 
 
