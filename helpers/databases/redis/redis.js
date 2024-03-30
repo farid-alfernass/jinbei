@@ -119,6 +119,20 @@ class Redis {
     });
   }
 
+  async publisher(key, value, timestamp) {
+    let client = await pool.getConnection(this.config);
+    if (validate.isEmpty(client)) {
+      client = await pool.createConnectionPool(this.config);
+    }
+    const message = JSON.stringify({ value, timestamp });
+    const clientRedis = client;
+    clientRedis.on('error', (err) => {
+      return wrapper.errorResponse(`Failed to set data on Redis: ${err}`);
+    });
+
+    clientRedis.publish(key, message);
+  }
+  
   async incrAttempt(key) {
     let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
