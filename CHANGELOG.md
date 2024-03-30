@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/farid-alfernass/jinbei/compare/v1.0.2...v1.2.0) (2024-03-30)
+
+
+### Features
+
+* add publisher helper redis ([4037892](https://github.com/farid-alfernass/jinbei/commit/40378924a72abbbcbaae74b64dd08fbdbbf82160))
+* add publisher helper redis ([b1be088](https://github.com/farid-alfernass/jinbei/commit/b1be088c01714bfe5049f438d07c44679fbed09d))
+
 ## [1.1.0](https://github.com/farid-alfernass/jinbei/compare/v1.0.1...v1.1.0) (2024-03-30)
 
 
