@@ -5,9 +5,9 @@ const wrapper = require('../helpers/utils/wrapper');
 const { ERROR } = require('../helpers/http-status/status_code');
 const { UnauthorizedError, ForbiddenError, NotFoundError } = require('../helpers/error');
 const fs = require('fs');
-const decodeKey = keyPath => fs.readFileSync(keyPath, 'utf8');
+// const decodeKey = keyPath => fs.readFileSync(keyPath, 'utf8');
 
-// const decodeKey = (secret) => Buffer.from(secret, 'base64');
+const decodeKey = (secret) => Buffer.from(secret, 'base64');
 
 const Redis = require('../helpers/databases/redis/redis');
 const redisClient = new Redis({
