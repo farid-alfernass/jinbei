@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/farid-alfernass/jinbei/compare/v1.2.0...v1.2.1) (2024-04-01)
+
+
+### Bug Fixes
+
+* get key from secret ([52bdcbc](https://github.com/farid-alfernass/jinbei/commit/52bdcbc7d40004c1d4b8d057151735052cbbabad))
+
 ## [1.2.0](https://github.com/farid-alfernass/jinbei/compare/v1.0.2...v1.2.0) (2024-03-30)
 
 
